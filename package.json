@@ -1,0 +1,27 @@
+{
+  "name": "arduino-station",
+  "version": "0.0.1",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "config": "^1.25.1",
+    "forecast": "^0.3.2",
+    "johnny-five": "^0.10.6",
+    "lastfm": "^0.9.2",
+    "winston": "^2.3.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mhor/arduino-station"
+  },
+  "keywords": [
+    "arduino",
+    "lastfm",
+    "weather"
+  ],
+  "author": "Maxime Horcholle",
+  "license": "MIT"
+}
