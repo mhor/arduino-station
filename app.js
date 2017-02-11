@@ -5,11 +5,23 @@
 const winston = require('winston');
 var config = require('config');
 var five = require("johnny-five");
+var moment = require("moment");
 
 var lcd;
 var loop = true;
 
 var sequence = [{
+    name: 'Datetime',
+    method: function() {
+        var dateTime = moment().format('LLLL');
+        lcd.clear().cursor(0, 0).print(dateTime);
+        board.info("LCD", 'Datetime', {"dateTime": dateTime});
+    },
+    enable: function() {
+        return true;
+    },
+    duration: 5000
+}, {
     name: 'Weather',
     method: function() {
         lcd.clear().cursor(0, 0).print("weather");
@@ -43,6 +55,7 @@ var sequence = [{
 
 function execute(step) {
 
+    var name = sequence[step].name;
     var method = sequence[step].method;
     var enabled = sequence[step].enable();
     var duration = sequence[step].duration || 3000;
@@ -50,6 +63,7 @@ function execute(step) {
     step++;
 
     if (enabled === true) {
+        board.info("APP", 'Run method ' + name + 'for ' + duration + ' milliseconds');
         method(lcd);
     } else {
         duration = 0;
