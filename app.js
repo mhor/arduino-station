@@ -6,9 +6,41 @@ const winston = require('winston');
 var config = require('config');
 var five = require("johnny-five");
 var moment = require("moment");
+var Forecast = require("forecast");
+var LastFmNode = require('lastfm').LastFmNode;
 
 var lcd;
 var loop = true;
+
+var forecast = new Forecast({
+  service: 'darksky',
+  key: config.get('darksky.key'),
+  units: 'celcius',
+  cache: true,
+  ttl: {
+    minutes: 60
+  }
+});
+
+var lastfm = new LastFmNode({
+  api_key: config.get('lastfm.key'),
+  secret: null,
+  useragent: null
+});
+
+var recentTrackLastfm = lastfm.stream(config.get('lastfm.username'));
+
+var lastPlayedTrack = null;
+recentTrackLastfm.on('lastPlayed', function(track) {
+    lastPlayedTrack = track;
+});
+
+var nowPlayingTrack = null;
+recentTrackLastfm.on('nowPlaying', function(track) {
+    nowPlayingTrack = track;
+});
+
+recentTrackLastfm.start();
 
 var sequence = [{
     name: 'Datetime',
@@ -24,8 +56,19 @@ var sequence = [{
 }, {
     name: 'Weather',
     method: function() {
-        lcd.clear().cursor(0, 0).print("weather");
-        board.info("LCD", 'weather');
+        forecast.get([config.get('darksky.lat'), config.get('darksky.long')], function(err, weather) {
+          if(err) {
+              return console.dir(err);
+          }
+
+          var city = config.get('darksky.name');
+          var temp = weather.currently.temperature + '° (' + weather.currently.summary + ')';
+          board.info("LCD", 'weather', {"city": city, "weather": weather, "temp": temp});
+          lcd.clear()
+            .cursor(0, 0).print(city)
+            .cursor(0, 1).print(temp)
+          ;
+      });
     },
     enable: function() {
         return true;
@@ -34,18 +77,34 @@ var sequence = [{
 }, {
     name: 'Lastfm (current track)',
     method: function() {
-        lcd.clear().cursor(0, 0).print("lastfm (current track)");
-        board.info("LCD", 'lastfm (current track)');
+        var artist = nowPlayingTrack.artist['#text'];
+        var track = nowPlayingTrack.name;
+        var album = nowPlayingTrack.album["#text"];
+
+        lcd.clear()
+            .cursor(0, 0).print(track)
+            .cursor(0, 1).print(artist)
+        ;
+
+        board.info("LCD", 'lastfm (current track)', {'artist': artist, "track": track});
     },
     enable: function() {
-        return true;
+        return recentTrackLastfm.isStreaming();
     },
     duration: 5000
 }, {
     name: 'Lastfm (last track)',
     method: function() {
-        lcd.clear().cursor(0, 0).print("Lastfm (last track)");
-        board.info("LCD", 'Lastfm (last track)');
+        var artist = lastPlayedTrack.artist['#text'];
+        var track = lastPlayedTrack.name;
+        var album = lastPlayedTrack.album["#text"];
+
+        lcd.clear()
+            .cursor(0, 0).print(track)
+            .cursor(0, 1).print(artist)
+        ;
+
+        board.info("LCD", 'Lastfm (last track)', {'artist': artist, "track": track});
     },
     enable: function() {
         return true;
