@@ -48,8 +48,8 @@ var sequence = [{
         var date = moment().format("ll");
         var time = moment().format("LT");
         lcd.clear()
-            .cursor(0, 0).print(date)
-            .cursor(0, 2).print(time)
+            .cursor(0, 0).print(date.substring(0,16))
+            .cursor(1, 0).print(time.substring(0,16))
         ;
         board.info("LCD", "Datetime", {"date": date, "time": time});
     },
@@ -66,11 +66,11 @@ var sequence = [{
           }
 
           var city = config.get("darksky.name");
-          var temp = weather.currently.temperature + "° (" + weather.currently.summary + ")";
+          var temp = weather.currently.temperature + ":box1: (" + weather.currently.summary + ")";
           board.info("LCD", "weather", {"city": city, "weather": weather, "temp": temp});
           lcd.clear()
-            .cursor(0, 0).print(city)
-            .cursor(0, 1).print(temp)
+            .cursor(0, 0).print(city.substring(0,16))
+            .cursor(1, 0).print(temp.substring(0,20))
           ;
       });
     },
@@ -86,8 +86,8 @@ var sequence = [{
         var album = nowPlayingTrack.album["#text"];
 
         lcd.clear()
-            .cursor(0, 0).print(track)
-            .cursor(0, 1).print(artist)
+            .cursor(0, 0).print(track.substring(0,16))
+            .cursor(1, 0).print(artist.substring(0,16))
         ;
 
         board.info("LCD", "lastfm (current track)", {"artist": artist, "track": track});
@@ -104,8 +104,8 @@ var sequence = [{
         var album = lastPlayedTrack.album["#text"];
 
         lcd.clear()
-            .cursor(0, 0).print(track)
-            .cursor(0, 1).print(artist)
+            .cursor(0, 0).print(track.substring(0,16))
+            .cursor(1, 0).print(artist.substring(0,16))
         ;
 
         board.info("LCD", "Lastfm (last track)", {"artist": artist, "track": track});
@@ -152,8 +152,11 @@ var board = new five.Board({
 
 board.on("ready", function() {
     lcd = new five.LCD({
-        pins: [7, 8, 9, 10, 11, 12]
-    });
+    controller: "PCF8574",
+    rows: 2,
+    cols: 16
+  });
+    lcd.useChar("box1");
     lcd.print("App is starting");
     board.info("APP", "starting");
 
