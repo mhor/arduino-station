@@ -2,7 +2,7 @@
 
 ## Summary
 
-A simple Arduino project driven by [johnny-five](http://johnny-five.io/), to print some usefull information.
+A simple Arduino project driven by [johnny-five](http://johnny-five.io/), to print some usefull information on LCD screen.
 
 ## Schema
 
@@ -108,8 +108,8 @@ $ node app.js
 ```
 
 - ```arduino```: your arduino lcd configuration passed on LCD [construction](http://johnny-five.io/api/lcd/#parameters)
-- ```lastfm.key```: Your lastFM key
-- ```darksky.key```: Your Darksky key
+- ```lastfm.key```: Your [LastFM](https://www.last.fm/home) key
+- ```darksky.key```: Your [Darksky](https://darksky.net) key
 
 See full example configuration [here](config/default.json.dist)
 
