@@ -88,7 +88,7 @@ class ArduinoStation {
     execute(step) {
         const name = this.sequences[step].type;
         const enabled = this.sequences[step].isEnabled();
-        var duration = this.sequences[step].duration;
+        let duration = this.sequences[step].duration;
 
         if (enabled === true) {
             this.board.info("APP", "Run method " + name + " for " + duration + " milliseconds");

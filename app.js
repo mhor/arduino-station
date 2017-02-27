@@ -2,13 +2,12 @@
 
 "use strict";
 
-const winston = require("winston");
-var config = require("config");
-var five = require("johnny-five");
-var ArduinoStation = require("./src/arduino-station");
+const config = require("config");
+const five = require("johnny-five");
+const ArduinoStation = require("./src/arduino-station");
 
-var lcd;
-var board = new five.Board({
+const lcd;
+const board = new five.Board({
     repl: false,
 });
 
@@ -18,7 +17,7 @@ board.on("ready", function() {
     lcd.print("App is starting");
     board.info("APP", "starting");
 
-    var arduinoStation = new ArduinoStation(board, lcd);
+    const arduinoStation = new ArduinoStation(board, lcd);
     arduinoStation.init();
     arduinoStation.execute(0);
 });
