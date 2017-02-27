@@ -25,7 +25,7 @@ $ node app.js
 
 ### Global Plugins configuration:
 
-- ```plugin_name```: step type
+- ```type```: step type
 - ```enabled```: enabled step
 - ```duration```: duration of step
 
@@ -33,7 +33,7 @@ $ node app.js
 
 ```json
 {
-    "plugin_name": "datetime",
+    "type": "datetime",
     "enabled": true,
     "duration": 5000,
     "format": {
@@ -50,7 +50,7 @@ $ node app.js
 
 ```json
 {
-    "plugin_name": "weather",
+    "type": "weather",
     "enabled": true,
     "duration": 5000,
     "city": "Paris",
@@ -67,7 +67,7 @@ $ node app.js
 
 ```json
 {
-    "plugin_name": "lastfm-last-played-track",
+    "type": "lastfm-last-played-track",
     "enabled": true,
     "duration": 5000,
     "username": "mhor_"
@@ -80,7 +80,7 @@ $ node app.js
 
 ```json
 {
-    "plugin_name": "lastfm-current-track",
+    "type": "lastfm-current-track",
     "enabled": true,
     "duration": 5000,
     "username": "mhor_"

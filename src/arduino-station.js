@@ -1,94 +1,117 @@
-var config = require("config");
+const config = require("config");
 
-var Forecast = require("forecast");
-var LastFmNode = require("lastfm").LastFmNode;
+const Forecast = require("forecast");
+const LastFmNode = require("lastfm").LastFmNode;
 
-var Datetime = require('./datetime');
-var LastFmCurrentTrack = require('./lastfm-current-track');
-var LastFmLastPlayedTrack = require('./lastfm-last-played-track');
-var Weather = require('./weather');
+const Datetime = require('./step/datetime');
+const LastFmCurrentTrack = require('./step/lastfm-current-track');
+const LastFmLastPlayedTrack = require('./step/lastfm-last-played-track');
+const Weather = require('./step/weather');
 
-function ArduinoStation(board, lcd) {
-    this.sequences = [];
-    this.loop = true;
-    this.board = board;
-    this.lcd = lcd;
-    this.lastfm = null;
-    this.forecast = null;
-    this.LastFmNode = null;
-}
-
-ArduinoStation.prototype.init = function() {
-    this.forecast = new Forecast({
-      service: "darksky",
-      key: config.get("darksky.key"),
-      units: "celcius",
-      cache: true,
-      ttl: {
-        minutes: 60
-      }
-    });
-
-    this.lastfm = new LastFmNode({
-      api_key: config.get("lastfm.key"),
-      secret: null,
-      useragent: null
-    });
-
-    var self = this;
-    config.get('steps').forEach(function(step) {
-        switch(step.plugin_name) {
-            case 'datetime':
-                var datetime = new Datetime(step.duration, step.enabled);
-                datetime.init();
-                self.sequences.push(datetime);
-                break;
-            case 'lastfm-last-played-track':
-                var lastFmLastPlayedTrack = new LastFmLastPlayedTrack(self.lastfm, step.username, step.duration, step.enabled);
-                lastFmLastPlayedTrack.init();
-                self.sequences.push(lastFmLastPlayedTrack);
-                break;
-            case 'lastfm-current-track':
-                var lastFmCurrentTrack = new LastFmCurrentTrack(self.lastfm, step.username, step.duration, step.enabled);
-                lastFmCurrentTrack.init();
-                self.sequences.push(lastFmCurrentTrack);
-                break;
-            case 'weather':
-                var weather = new Weather(self.forecast, step.lat, step.long, step.city, step.duration, step.enabled);
-                weather.init();
-                self.sequences.push(weather);
-                break;
-        }
-    });
-}
-
-ArduinoStation.prototype.execute = function(step) {
-
-    var name = this.sequences[step].type;
-    var enabled = this.sequences[step].isEnabled();
-    var duration = this.sequences[step].duration;
-
-    if (enabled === true) {
-        this.board.info("APP", "Run method " + name + " for " + duration + " milliseconds");
-        this.sequences[step].execute(this.board, this.lcd);
-    } else {
-        duration = 0;
+class ArduinoStation {
+    constructor(board, lcd) {
+        this.sequences = [];
+        this.loop = true;
+        this.board = board;
+        this.lcd = lcd;
+        this.lastfm = null;
+        this.forecast = null;
+        this.LastFmNode = null;
     }
 
-    step++;
-    if (step === this.sequences.length) {
-        if (this.loop) {
-            step = 0;
+    init() {
+        this.forecast = new Forecast({
+          service: "darksky",
+          key: config.get("darksky.key"),
+          units: "celcius",
+          cache: true,
+          ttl: {
+            minutes: 60
+          }
+        });
+
+        this.lastfm = new LastFmNode({
+          api_key: config.get("lastfm.key"),
+          secret: null,
+          useragent: null
+        });
+
+        const self = this;
+        config.get('steps').forEach((step) => {
+            switch(step.type) {
+                case 'datetime':
+                    const datetime = new Datetime(
+                        step.format.date,
+                        step.format.time,
+                        step.duration,
+                        step.enabled
+                    );
+                    datetime.init();
+                    self.sequences.push(datetime);
+                    break;
+                case 'lastfm-last-played-track':
+                    const lastFmLastPlayedTrack = new LastFmLastPlayedTrack(
+                        self.lastfm,
+                        step.username,
+                        step.duration,
+                        step.enabled
+                    );
+                    lastFmLastPlayedTrack.init();
+                    self.sequences.push(lastFmLastPlayedTrack);
+                    break;
+                case 'lastfm-current-track':
+                    const lastFmCurrentTrack = new LastFmCurrentTrack(
+                        self.lastfm,
+                        step.username,
+                        step.duration,
+                         step.enabled
+                     );
+                     lastFmCurrentTrack.init();
+                     self.sequences.push(lastFmCurrentTrack);
+                     break;
+                case 'weather':
+                    const weather = new Weather(
+                        self.forecast,
+                        step.lat,
+                        step.long,
+                        step.city,
+                        step.duration,
+                        step.enabled
+                    );
+                    weather.init();
+                    self.sequences.push(weather);
+                    break;
+            }
+        });
+    }
+
+    execute(step) {
+        const name = this.sequences[step].type;
+        const enabled = this.sequences[step].isEnabled();
+        var duration = this.sequences[step].duration;
+
+        if (enabled === true) {
+            this.board.info("APP", "Run method " + name + " for " + duration + " milliseconds");
+            this.sequences[step].execute(this.board, this.lcd);
         } else {
-            // We"re done!
-            process.exit(0);
+            duration = 0;
         }
-    }
 
-    this.board.wait(
-        duration,
-        (function() {this.execute(step);}).bind(this)
-    );
+        step++;
+        if (step === this.sequences.length) {
+            if (this.loop) {
+                step = 0;
+            } else {
+                // We"re done!
+                process.exit(0);
+            }
+        }
+
+        this.board.wait(
+            duration,
+            (() => { this.execute(step); }).bind(this)
+        );
+    }
 }
 
 module.exports = ArduinoStation;

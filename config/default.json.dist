@@ -11,36 +11,36 @@
 		"key": null
 	},
 	"steps": [{
-		"plugin_name": "lastfm-current-track",
+		"type": "lastfm-current-track",
 		"enabled": true,
 		"duration": 5000,
 		"username": "mhor_"
 	}, {
-		"plugin_name": "lastfm-last-played-track",
+		"type": "lastfm-last-played-track",
 		"enabled": true,
 		"duration": 5000,
 		"username": "mhor_"
 	}, {
-		"plugin_name": "weather",
+		"type": "weather",
 		"enabled": true,
 		"duration": 5000,
 		"city": "Paris",
 		"lat": 48.8534100,
 		"long": 2.3488000
 	}, {
-		"plugin_name": "weather",
+		"type": "weather",
 		"enabled": true,
 		"duration": 5000,
 		"city": "Mitry Mory",
 		"lat": 48.9833,
 		"long": 2.6167
 	}, {
-		"plugin_name": "datetime",
+		"type": "datetime",
 		"enabled": true,
 		"duration": 5000,
 		"format": {
-			"date": "LLLL",
-			"time": "llll"
+			"date": "ll",
+			"time": "LT"
 		}
 	}]
 }
