@@ -6,13 +6,12 @@ const config = require("config");
 const five = require("johnny-five");
 const ArduinoStation = require("./src/arduino-station");
 
-const lcd;
 const board = new five.Board({
     repl: false,
 });
 
 board.on("ready", function() {
-    lcd = new five.LCD(config.get('arduino'));
+    const lcd = new five.LCD(config.get('arduino'));
     lcd.useChar("box1");
     lcd.print("App is starting");
     board.info("APP", "starting");
