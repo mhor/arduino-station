@@ -4,6 +4,11 @@
 
 A simple Arduino project driven by [johnny-five](http://johnny-five.io/), to print some usefull information on LCD screen.
 
+## Result
+
+![ArduinoStationSchema](/docs/arduino-station-1.jpg)
+![ArduinoStationSchema](/docs/arduino-station.gif)
+
 ## Schema
 
 ![ArduinoStationSchema](/docs/arduino-station.png)
