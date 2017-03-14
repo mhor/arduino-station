@@ -15,6 +15,10 @@ A simple Arduino project driven by [johnny-five](http://johnny-five.io/), to pri
 
 Fritzing diagram: [arduino-station.fzz](/docs/arduino-station.fzz)
 
+## 3D Printable Case
+
+You can find STL files [here](/docs/case)
+
 ## Installation
 
 [Install Firmata on your Arduino](http://www.instructables.com/id/Arduino-Installing-Standard-Firmata/)
