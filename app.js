@@ -10,7 +10,7 @@ const board = new five.Board({
     repl: false,
 });
 
-board.on("ready", function() {
+board.on("ready", () => {
     const lcd = new five.LCD(config.get('arduino'));
     lcd.useChar("box1");
     lcd.print("App is starting");

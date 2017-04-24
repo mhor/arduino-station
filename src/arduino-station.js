@@ -6,6 +6,8 @@ const LastFmNode = require("lastfm").LastFmNode;
 const Datetime = require('./step/datetime');
 const LastFmCurrentTrack = require('./step/lastfm-current-track');
 const LastFmLastPlayedTrack = require('./step/lastfm-last-played-track');
+const LastFmTodayPlaycount = require('./step/lastfm-today-playcount');
+const LastFmTotalPlaycount = require('./step/lastfm-total-playcount');
 const Weather = require('./step/weather');
 
 class ArduinoStation {
@@ -48,6 +50,26 @@ class ArduinoStation {
                     );
                     datetime.init();
                     self.sequences.push(datetime);
+                    break;
+                case 'lastfm-total-playcount':
+                    const lastFmTotalPlaycount = new LastFmTotalPlaycount(
+                        self.lastfm,
+                        step.username,
+                        step.duration,
+                        step.enabled
+                    );
+                    lastFmTotalPlaycount.init();
+                    self.sequences.push(lastFmTotalPlaycount);
+                    break;
+                case 'lastfm-today-playcount':
+                    const lastFmTodayPlaycount = new LastFmTodayPlaycount(
+                        self.lastfm,
+                        step.username,
+                        step.duration,
+                        step.enabled
+                    );
+                    lastFmTodayPlaycount.init();
+                    self.sequences.push(lastFmTodayPlaycount);
                     break;
                 case 'lastfm-last-played-track':
                     const lastFmLastPlayedTrack = new LastFmLastPlayedTrack(

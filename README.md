@@ -98,6 +98,32 @@ $ node app.js
 
 - ```username```: username of LastFM account
 
+### LastFM total playcount
+
+```json
+{
+    "type": "lastfm-total-playcount",
+    "enabled": true,
+    "duration": 5000,
+    "username": "mhor_"
+}
+```
+
+- ```username```: username of LastFM account
+
+### LastFM today playcount
+
+```json
+{
+    "type": "lastfm-today-playcount",
+    "enabled": true,
+    "duration": 5000,
+    "username": "mhor_"
+}
+```
+
+- ```username```: username of LastFM account
+
 ## Other Configuration:
 
 ```json
