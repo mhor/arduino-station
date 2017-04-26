@@ -148,6 +148,30 @@ $ node app.js
 
 See full example configuration [here](config/default.json.dist)
 
+## Commands
+
+You can execute command on button action.
+
+### Example
+
+```json
+{
+    "pin": "3",
+    "action": "press",
+    "command": "gmusicbrowser",
+    "args" : [
+        "-cmd",
+        "PlayPause"
+        "-ifnotrunning",
+        "abort"
+    ]
+},
+```
+- ```pin```: Button pin
+- ```action```: Event to listen (hold|press|release)
+- ```command```: Command
+- ```args```: Command arguments
+
 ## License
 
 See ```LICENSE``` for more information
